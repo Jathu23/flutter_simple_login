@@ -39,7 +39,7 @@ class LoginPage extends StatelessWidget {
             // Login button
             ElevatedButton(
               onPressed: () {
-                // Get the text from the controllers
+                
                 String username = _usernameController.text;
                 String password = _passwordController.text;
 
@@ -63,10 +63,29 @@ class LoginPage extends StatelessWidget {
                     },
                   );
                   return;
-                  
+                } else if (username == '12' && password == '12') {
+                 
+                  Navigator.pushNamed(context, '/dashboard');
+                } else {
+                  // Show an alert dialog if the credentials are incorrect
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        title: const Text('Error'),
+                        content: const Text('Incorrect username or password'),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: const Text('OK'),
+                          ),
+                        ],
+                      );
+                    },
+                  );
                 }
-                // Navigate to the dashboard page
-                Navigator.pushNamed(context, '/dashboard');
               },
               child: const Text('Login'),
             ),
