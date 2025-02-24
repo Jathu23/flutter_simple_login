@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_simple_login_ui/services/api_service.dart';
+import 'package:flutter_simple_login_ui/widgets/post_card.dart';
 
 class DashboardPage extends StatefulWidget {
   DashboardPage({super.key});
@@ -31,10 +32,7 @@ class _DashboardPageState extends State<DashboardPage> {
             child: ListView.builder(
               itemCount: posts.length,
               itemBuilder: (context, index) {
-                return ListTile(
-                  title: Text(posts[index]['title']),
-                  subtitle: Text(posts[index]['body']),
-                );
+                return PostCard(post: posts[index]);
               },
             ),
           ),
