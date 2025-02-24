@@ -14,6 +14,17 @@ class _DashboardPageState extends State<DashboardPage> {
   List<dynamic> posts = [];
 
   @override
+  void initState() {
+    super.initState();
+    _fetchPosts();
+  }
+
+  Future<void> _fetchPosts() async {
+    posts = await _apiService.getAllPosts();
+    setState(() {});
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -21,13 +32,7 @@ class _DashboardPageState extends State<DashboardPage> {
       ),
       body: Column(
         children: [
-          ElevatedButton(
-            onPressed: () async {
-              posts = await _apiService.getAllPosts();
-              setState(() {});
-            },
-            child: const Text('Get Posts'),
-          ),
+        Text("All Posts", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
           Expanded(
             child: ListView.builder(
               itemCount: posts.length,
