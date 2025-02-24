@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_simple_login_ui/services/api_service.dart';
+
 
 class LoginPage extends StatelessWidget {
   LoginPage({super.key});
@@ -6,6 +8,8 @@ class LoginPage extends StatelessWidget {
   // Create controllers to manage the text input for username and password
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+
+  final ApiService _apiService = ApiService();  // Create an instance of ApiService
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +31,7 @@ class LoginPage extends StatelessWidget {
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8.0),
                     ),
-                    labelText: 'Username',
+                    labelText: 'Email',
                     prefixIcon: const Icon(Icons.person),
                   ),
                 ),
@@ -47,18 +51,18 @@ class LoginPage extends StatelessWidget {
                 const SizedBox(height: 24), // Add some space before the button
                 // Login button
                 ElevatedButton(
-                  onPressed: () {
-                    String username = _usernameController.text;
+                  onPressed: () async {
+                    String email = _usernameController.text;
                     String password = _passwordController.text;
 
-                    if (username.isEmpty || password.isEmpty) {
+                    if (email.isEmpty || password.isEmpty) {
                       // Show an alert dialog if the fields are empty
                       showDialog(
                         context: context,
                         builder: (context) {
                           return AlertDialog(
                             title: const Text('Error'),
-                            content: const Text('Please enter username and password'),
+                            content: const Text('Please enter email and password'),
                             actions: [
                               TextButton(
                                 onPressed: () {
@@ -71,16 +75,44 @@ class LoginPage extends StatelessWidget {
                         },
                       );
                       return;
-                    } else if (username == '12' && password == '12') {
-                      Navigator.pushNamed(context, '/dashboard');
-                    } else {
-                      // Show an alert dialog if the credentials are incorrect
+                    }
+
+                    try {
+                      // Call the login API
+                      final response = await _apiService.login(email, password);
+
+                      // Check if login was successful
+                      if (response['success']) {
+                        // Store the token, if necessary, and navigate
+                        Navigator.pushNamed(context, '/dashboard');
+                      } else {
+                        // Show an error dialog if login failed
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              title: const Text('Error'),
+                              content: Text(response['message']),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: const Text('OK'),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      }
+                    } catch (e) {
+                      // Handle API error
                       showDialog(
                         context: context,
                         builder: (context) {
                           return AlertDialog(
                             title: const Text('Error'),
-                            content: const Text('Incorrect username or password'),
+                            content: Text('Failed to login. Please try again.'),
                             actions: [
                               TextButton(
                                 onPressed: () {

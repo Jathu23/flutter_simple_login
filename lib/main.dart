@@ -14,7 +14,7 @@ class MainApp extends StatelessWidget {
     return MaterialApp(
       home: LoginPage(),
       routes: {
-        '/dashboard': (context) => const DashboardPage(),
+        '/dashboard': (context) => DashboardPage(),
       },
     );
   }
